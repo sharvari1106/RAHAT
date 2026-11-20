@@ -1,0 +1,125 @@
+erDiagram
+    incidents ||--o{ sos_requests : "receives"
+    incidents ||--o{ camps : "has"
+    incidents ||--o{ missing_reports : "has"
+    incidents ||--o{ alerts : "raises"
+    incidents |o--o{ teams : "deploys"
+    teams ||--o{ dispatches : "is sent on"
+    sos_requests ||--o{ dispatches : "served by"
+    sos_requests ||--o{ sos_status_history : "logs"
+    sos_requests |o--o{ sos_requests : "duplicate of"
+    users ||--o{ dispatches : "assigns"
+    users }o--o| teams : "leads"
+    users }o--o| camps : "manages"
+    camps ||--|| depots : "has store"
+    depots ||--o{ stock : "holds"
+    resources ||--o{ stock : "of"
+    depots ||--o{ stock_movements : "ledger"
+    resources ||--o{ stock_movements : "of"
+    transfers ||--o{ transfer_items : "carries"
+    transfers |o--o{ stock_movements : "causes"
+    depots ||--o{ transfers : "from / to"
+    people ||--o{ camp_stays : "stays"
+    camps ||--o{ camp_stays : "hosts"
+    sos_requests |o--o{ people : "rescued from"
+    people |o--o{ missing_reports : "matched to"
+
+    incidents { int incident_id PK
+        varchar code UK
+        disaster_type disaster_type
+        incident_status status
+        smallint severity
+        numeric center_lat
+        numeric center_lng
+        numeric radius_km }
+    sos_requests { int sos_id PK
+        varchar ticket UK
+        int incident_id FK
+        varchar reporter_phone
+        numeric lat
+        numeric lng
+        text description
+        smallint people_count
+        need_type_array needs
+        sos_status status
+        int suspected_dup_of FK
+        int duplicate_of FK
+        vector_384 embedding
+        tsvector search_tsv }
+    sos_transitions { sos_status from_status PK
+        sos_status to_status PK }
+    sos_status_history { bigint history_id PK
+        int sos_id FK
+        sos_status to_status
+        int changed_by FK }
+    teams { int team_id PK
+        varchar name UK
+        team_kind kind
+        smallint capacity
+        team_status status
+        numeric cur_lat
+        numeric cur_lng }
+    dispatches { int dispatch_id PK
+        int sos_id FK
+        int team_id FK
+        dispatch_status status
+        numeric distance_km
+        int eta_minutes
+        smallint people_rescued }
+    users { int user_id PK
+        varchar phone UK
+        user_role role
+        int team_id FK
+        int camp_id FK }
+    camps { int camp_id PK
+        int incident_id FK
+        int capacity
+        int occupancy
+        camp_status status }
+    depots { int depot_id PK
+        depot_kind kind
+        int camp_id FK,UK }
+    resources { int resource_id PK
+        varchar name UK
+        numeric per_person_per_day
+        boolean critical }
+    stock { int depot_id PK,FK
+        int resource_id PK,FK
+        numeric quantity }
+    stock_movements { bigint movement_id PK
+        int depot_id FK
+        int resource_id FK
+        numeric qty_change
+        movement_reason reason
+        int transfer_id FK }
+    transfers { int transfer_id PK
+        varchar code UK
+        int from_depot FK
+        int to_depot FK
+        transfer_status status }
+    transfer_items { int transfer_id PK,FK
+        int resource_id PK,FK
+        numeric quantity }
+    people { int person_id PK
+        varchar full_name
+        smallint age
+        gender_type gender
+        varchar marks
+        vector_384 embedding }
+    camp_stays { int stay_id PK
+        int person_id FK
+        int camp_id FK
+        timestamptz checked_in_at
+        timestamptz checked_out_at }
+    missing_reports { int report_id PK
+        varchar ticket UK
+        varchar full_name
+        smallint age
+        missing_status status
+        int matched_person_id FK
+        vector_384 embedding }
+    alerts { int alert_id PK
+        int incident_id FK
+        varchar kind
+        alert_severity severity
+        varchar dedupe_key }

@@ -1,0 +1,15 @@
+flowchart TB
+    PUB["<b>Public pages</b> (no login)<br/>/help: SOS form · missing-person form · camps map<br/>/track: ticket + last 4 phone digits"]
+    UI["<b>Staff pages</b> (Next.js React)<br/>Situation room · SOS queue · Teams · Camps<br/>Supplies · Missing persons · Reports · Admin · My task"]
+    MW["<b>middleware.js</b><br/>verify signed JWT cookie · role → allowed pages"]
+    API["<b>Next.js Route Handlers (/api/*)</b><br/>requireUser(role) · camp-scope checks · input validation<br/>PostgreSQL error → friendly message"]
+    EMB["<b>transformers.js</b><br/>multilingual MiniLM<br/>text → 384-d vector (local, no API key)"]
+    PG[("<b>PostgreSQL 16</b><br/>18 tables · PK/FK · CHECK · UNIQUE · partial unique indexes<br/>fn_create_sos · fn_dispatch_team · fn_auto_dispatch (SKIP LOCKED)<br/>fn_register_evacuee · fn_create_transfer · fn_match_missing<br/>triggers: state machine · history · capacity · stock ledger · alerts<br/>views + materialized view mv_daily_sitrep<br/>pgvector HNSW · pg_trgm GiST/GIN · full-text GIN · BRIN")]
+    MG[("<b>MongoDB</b> (optional)<br/>field_reports (2dsphere + wildcard index)<br/>activity_logs (TTL)<br/>aggregation pipelines")]
+
+    PUB -->|"fetch JSON"| API
+    UI -->|"fetch JSON (HttpOnly cookie)"| MW
+    MW --> API
+    API -->|"embed SOS text / person description"| EMB
+    API -->|"pg Pool · BEGIN / COMMIT · CALL"| PG
+    API -->|"insert · $near · $group"| MG
