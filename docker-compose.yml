@@ -1,0 +1,33 @@
+# Local databases for development:  docker compose up -d
+services:
+  postgres:
+    image: pgvector/pgvector:pg16          # PostgreSQL 16 + pgvector (pg_trgm is built in)
+    container_name: rahat-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rahat}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rahat_dev_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-rahat}
+      TZ: Asia/Kolkata
+      PGTZ: Asia/Kolkata
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/sql:ro                     # docker exec -it rahat-postgres psql -U rahat -f /sql/05_important_queries.sql
+      - ./tests:/tests:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rahat}"]
+      interval: 5s
+      retries: 10
+
+  mongo:
+    image: mongo:7
+    container_name: rahat-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  pgdata:
+  mongodata:
