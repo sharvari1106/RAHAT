@@ -5,6 +5,7 @@
 | | |
 |---|---|
 | **Student** | Sharvari Naik, PES1UG24CS431 (individual project) |
+| **Section** | H |
 | **Repository** | https://github.com/sharvari1106/RAHAT |
 | **Database option** | Option 2: SQL (PostgreSQL 16) + vector database (pgvector). MongoDB is used in addition for flexible field reports. |
 
