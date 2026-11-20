@@ -1,12 +1,11 @@
-# RAHAT: Disaster Relief Coordination System
+﻿# RAHAT: Disaster Relief Coordination System
 
 **DBMS Experiential Learning, Level 3 Project**
 
 | | |
 |---|---|
-| **Team** | _Member 1 name, SRN_ · _Member 2 name, SRN_ |
-| **Section** | _Section_ |
-| **Repository** | _https://github.com/&lt;user&gt;/rahat_ |
+| **Student** | Sharvari Naik, PES1UG24CS431 (individual project) |
+| **Repository** | https://github.com/sharvari1106/RAHAT |
 | **Database option** | Option 2: SQL (PostgreSQL 16) + vector database (pgvector). MongoDB is used in addition for flexible field reports. |
 
 ---

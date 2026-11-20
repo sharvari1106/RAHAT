@@ -1,4 +1,4 @@
-# RAHAT: disaster relief coordination
+﻿# RAHAT: disaster relief coordination
 
 During a flood or cyclone, a district control room has to answer four questions every minute:
 
@@ -14,7 +14,6 @@ RAHAT is one shared system for all four. The rules that keep people safe are enf
 > DBMS Level 3 project (Option 2: SQL + vector database, plus MongoDB for field reports).
 > - Full write-up: [`docs/PROJECT_REPORT.md`](docs/PROJECT_REPORT.md)
 > - ER diagram: [`docs/er-diagram.png`](docs/er-diagram.png)
-> - Team split: [`docs/TEAM_SPLIT.md`](docs/TEAM_SPLIT.md)
 
 ---
 
@@ -120,7 +119,7 @@ rahat/
 │   └── client.js                    browser helpers
 ├── middleware.js                    page-level role-based access control
 ├── scripts/                         db-setup, seed, embed, run-sql
-└── docs/                            PROJECT_REPORT.md, TEAM_SPLIT.md, er-diagram, architecture
+└── docs/                            PROJECT_REPORT.md, er-diagram, architecture
 ```
 
 ## Security notes
